@@ -34,8 +34,50 @@ impl Graph {
         }
     }
 
-    // TODO: Implement these
-    pub fn dfs(&self, starting_vertex: usize) {}
+    // Why BFS - fairness - queue
+    pub fn dfs(&self, starting_vertex: usize) {
+        // dfs is done using stack
+        let mut stack: Vec<usize> = Vec::new();
+        let mut visited = vec![false; self.size];
 
-    pub fn bfs(&self, starting_vertex: usize) {}
+        stack.push(starting_vertex);
+
+        while let Some(elem) = stack.pop() {
+            if visited[elem] {
+                continue;
+            }
+
+            // mark as visited ?
+            println!("{}", elem);
+            visited[elem] = true;
+
+            for (i, &connected) in self.mat[elem].iter().enumerate() {
+                if connected && !visited[i] {
+                    stack.push(i);
+                }
+            }
+        }
+    }
+
+    pub fn bfs(&self, starting_vertex: usize) {
+        // bfs is done using queue
+        let mut visited = vec![false; self.size];
+        let mut queue = VecDeque::new();
+        queue.push_back(starting_vertex);
+
+        while let Some(elem) = queue.pop_front() {
+            if visited[elem] {
+                continue;
+            }
+
+            println!("{}", elem);
+            visited[elem] = true;
+
+            for (i, &conn) in self.mat[elem].iter().enumerate() {
+                if conn && !visited[i] {
+                    queue.push_back(i);
+                }
+            }
+        }
+    }
 }
