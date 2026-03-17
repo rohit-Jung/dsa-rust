@@ -1,7 +1,7 @@
 use std::{collections::VecDeque, vec};
 
 pub struct Graph {
-    size: usize,
+    pub size: usize,
     mat: Vec<Vec<bool>>,
 }
 
@@ -77,6 +77,21 @@ impl Graph {
                 if conn && !visited[i] {
                     queue.push_back(i);
                 }
+            }
+        }
+    }
+
+    pub fn dfs_rec(&self, node: usize, seen: &mut Vec<bool>, prev: &mut Vec<usize>) {
+        if seen[node] {
+            return;
+        };
+
+        seen[node] = true;
+
+        for (i, &connected) in self.mat[node].iter().enumerate() {
+            if connected && !seen[i] {
+                prev[i] = node;
+                self.dfs_rec(i, seen, prev);
             }
         }
     }

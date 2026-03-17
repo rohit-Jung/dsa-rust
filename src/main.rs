@@ -2,14 +2,16 @@
 
 use rust::{
     graphs::matrix_rep::Graph,
-    knapsack::fractional::fractional_knapsack,
-    sortings::{bubble_sort, insertion_sort, quick_sort, selection_sort},
+    knapsack::{fractional::fractional_knapsack, zeroandone},
+    sortings::{bubble_sort, insertion_sort, merge_sort::merge_sort, quick_sort, selection_sort},
 };
 
 // use rust::graphs::list_rep::ListGraph;
 fn main() {
     println!("Hello, DSA!");
-    run_knapsack();
+    // run_sortings();
+    // run_knapsack();
+    run_graphs();
 }
 
 fn run_graphs() {
@@ -35,6 +37,27 @@ fn run_graphs() {
     graph.add_edge(6, 2);
     // graph.print_graph();
     graph.bfs(0);
+    println!();
+    graph.dfs(0);
+
+    let mut seen: Vec<bool> = vec![false; graph.size];
+    let mut prev: Vec<usize> = vec![usize::MAX; graph.size];
+
+    graph.dfs_rec(0, &mut seen, &mut prev);
+    println!("{:?}", prev);
+
+    // search through
+    let mut curr = 5;
+    let mut out: Vec<usize> = Vec::new();
+    while prev[curr] != usize::MAX {
+        out.push(curr);
+        curr = prev[curr]
+    }
+
+    // 0 is the source
+    out.push(0);
+    out.reverse();
+    println!("out {:?}", out);
 
     // let mut graph = ListGraph::new(5);
     // graph.add_edge(0, 1, true);
@@ -48,19 +71,25 @@ fn run_graphs() {
 
 fn run_sortings() {
     // sortings
-    let mut unsorted = [5, 4, 3, 2, 1];
+    let mut unsorted = [3, 1, 4, 2, 5];
     println!("{:?}", unsorted);
     // bubble_sort::bubble_sort(&mut unsorted);
     // selection_sort::selection_sort(&mut unsorted);
     // insertion_sort::insertion_sort(&mut unsorted);
-    quick_sort::quick_sort(&mut unsorted);
+    // quick_sort::quick_sort(&mut unsorted);
+    merge_sort(&mut unsorted);
     println!("{:?}", unsorted);
 }
 
 fn run_knapsack() {
-    let values = vec![24, 21, 12, 10];
-    let weights = vec![7, 3, 4, 5];
-    let capacity = 20;
+    // let values = vec![24, 21, 12, 10];
+    // let weights = vec![7, 3, 4, 5];
+    // let capacity = 20;
 
-    fractional_knapsack(values, weights, capacity);
+    let values = vec![2, 3, 4, 5];
+    let weights = vec![3, 4, 5, 6];
+    let capacity = 5;
+
+    // fractional_knapsack(values, weights, capacity);
+    zeroandone::zeroone_knapsack(values, weights, capacity);
 }
