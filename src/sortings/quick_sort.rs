@@ -1,40 +1,59 @@
 // done by selection of pivot element and putting it into right place
-
 pub fn quick_sort(arr: &mut [i32]) {
-    if arr.len() > 1 {
-        sort(arr, 0, arr.len() - 1);
-    }
-}
-
-fn sort(arr: &mut [i32], s: usize, e: usize) {
-    if s >= e {
+    if arr.len() <= 1 {
         return;
     }
 
-    let mut i = s;
-    let mut j = e;
-    let mid = s + (e - s) / 2;
-    let pivot = arr[mid];
+    let pivot_idx = lomuto_partition(arr, 0, arr.len() - 1);
+    // let pivot_idx = hoare_partition(arr, 0, arr.len() - 1);
+    quick_sort(&mut arr[..=pivot_idx]);
+    quick_sort(&mut arr[pivot_idx + 1..]);
+}
 
-    while i <= j {
-        while arr[i] < pivot {
+// hoare_partition: compare and swap
+fn hoare_partition(arr: &mut [i32], low: usize, high: usize) -> usize {
+    let pivot = arr[low];
+
+    let mut i = low as isize - 1;
+    let mut j = high as isize + 1;
+
+    loop {
+        //mimicking do while loop
+        loop {
             i += 1;
+            if arr[i as usize] >= pivot {
+                break;
+            }
         }
 
-        while arr[j] > pivot {
+        loop {
             j -= 1;
+            if arr[j as usize] < pivot {
+                break;
+            }
         }
 
-        if i <= j {
+        // if exceeds then
+        if i >= j {
+            return j as usize;
+        }
+
+        arr.swap(i as usize, j as usize);
+    }
+}
+
+// easier version of pivot finding correct position
+fn lomuto_partition(arr: &mut [i32], low: usize, high: usize) -> usize {
+    let pivot = arr[high];
+    let mut i = low;
+
+    for j in low..high {
+        if arr[j] > pivot {
             arr.swap(i, j);
             i += 1;
-            if j == 0 {
-                break;
-            };
-            j -= 1;
         }
     }
 
-    sort(arr, s, j);
-    sort(arr, i, e);
+    arr.swap(i, high);
+    i
 }
