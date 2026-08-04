@@ -4,3 +4,4 @@ pub mod recursion;
 pub mod trees;
 pub mod sortings;
 pub mod knapsack;
+pub mod two_pointers;
